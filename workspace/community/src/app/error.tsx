@@ -1,6 +1,8 @@
+"use client";
+
 import Button from "@/components/Button";
 
-export default function NotFound() {
+export default function Error() {
   return (
     <div className="py-20 bg-red-100 border border-red-400 text-red-700 p-4 rounded-lg flex flex-col items-center space-y-2">
       <h2 className="text-xl font-semibold mb-2 text-center">

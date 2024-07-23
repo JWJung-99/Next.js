@@ -1,3 +1,4 @@
+import Submit from "@/components/Submit";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -21,7 +22,7 @@ export function generateMetadata({
   };
 }
 
-export default function PostNewPage() {
+export default function PostNewPage({ params }: { params: { type: string } }) {
   return (
     <main className="min-w-[320px] p-4">
       <div className="text-center py-4">
@@ -30,7 +31,7 @@ export default function PostNewPage() {
         </h2>
       </div>
       <section className="mb-8 p-4">
-        <form action="/info/1">
+        <form action={`/${params.type}`} method="post">
           <div className="my-4">
             <label className="block text-lg content-center" htmlFor="title">
               제목
@@ -63,14 +64,9 @@ export default function PostNewPage() {
           </div>
           <hr />
           <div className="flex justify-end my-6">
-            <button
-              type="submit"
-              className="bg-orange-500 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded"
-            >
-              등록
-            </button>
+            <Submit>등록</Submit>
             <Link
-              href="/info"
+              href={`/${params.type}`}
               className="bg-gray-900 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded"
             >
               취소

@@ -1,4 +1,14 @@
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "회원 가입",
+  openGraph: {
+    title: "회원 가입 - 멋사컴",
+    description: "무료 회원 가입후 멋사컴의 모든 서비스를 이용하세요.",
+    url: "/user/signup",
+  },
+};
 
 export default function SignupPage() {
   return (

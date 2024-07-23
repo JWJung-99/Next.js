@@ -21,7 +21,11 @@ export function generateMetadata({
   };
 }
 
-export default function PostEditPage() {
+export default function PostEditPage({
+  params,
+}: {
+  params: { type: string; id: string };
+}) {
   return (
     <main className="min-w-[320px] p-4">
       <div className="text-center py-4">
@@ -30,7 +34,7 @@ export default function PostEditPage() {
         </h2>
       </div>
       <section className="mb-8 p-4">
-        <form action="/info/1">
+        <form action={`/${params.type}/${params.id}`} method="POST">
           <div className="my-4">
             <label className="block text-lg content-center" htmlFor="title">
               제목
@@ -76,7 +80,7 @@ export default function PostEditPage() {
               수정
             </button>
             <Link
-              href="/info/1"
+              href={`/${params.type}/${params.id}`}
               className="bg-gray-900 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded"
             >
               취소

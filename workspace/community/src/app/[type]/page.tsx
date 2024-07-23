@@ -1,5 +1,26 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import ListItem from "./ListItem";
+import Pagination from "@/components/Pagination";
+import Search from "@/components/Search";
+
+interface DataType {
+  item: ItemType[];
+}
+
+export interface ItemType {
+  type: string;
+  _id: number;
+  title: string;
+  views: number;
+  repliesCount: number;
+  createdAt: string;
+  user: User;
+}
+
+interface User {
+  name: string;
+}
 
 export function generateMetadata({
   params,
@@ -33,7 +54,38 @@ export function generateMetadata({
   };
 }
 
-export default function PostMainPage() {
+export default function PostMainPage({ params }: { params: { type: string } }) {
+  const data: DataType = {
+    item: [
+      {
+        type: "info",
+        _id: 2,
+        title: "안녕하세요",
+        views: 29,
+        repliesCount: 2,
+        createdAt: "2024.07.05 13:39:23",
+        user: {
+          name: "용쌤",
+        },
+      },
+      {
+        type: "info",
+        _id: 1,
+        title: "좋은 소식이 있습니다",
+        views: 22,
+        repliesCount: 5,
+        createdAt: "2024.07.03 17:59:13",
+        user: {
+          name: "제이지",
+        },
+      },
+    ],
+  };
+
+  const list: JSX.Element[] = data?.item?.map((item) => (
+    <ListItem key={item._id} item={item} params={params} />
+  ));
+
   return (
     <main className="min-w-80 p-10">
       <div className="text-center py-4">
@@ -42,26 +94,13 @@ export default function PostMainPage() {
         </h2>
       </div>
       <div className="flex justify-end mr-4">
-        <form action="#">
-          <input
-            className="dark:bg-gray-600 bg-gray-100 p-1 rounded"
-            type="text"
-            name="keyword"
-          />
-          <button
-            type="submit"
-            className="bg-orange-500 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded"
-          >
-            검색
-          </button>
-        </form>
-
-        <a
-          href="/info/new"
+        <Search />
+        <Link
+          href={`/${params.type}/new`}
           className="bg-orange-500 py-1 px-4 text-base text-white font-semibold ml-2 hover:bg-amber-400 rounded"
         >
           글작성
-        </a>
+        </Link>
       </div>
       <section className="pt-10">
         <table className="border-collapse w-full table-fixed">
@@ -89,49 +128,11 @@ export default function PostMainPage() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr className="border-b border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300 ease-in-out">
-              <td className="p-2 text-center">2</td>
-              <td className="p-2 truncate indent-4">
-                <Link href="/info/2" className="cursor-pointer">
-                  안녕하세요.
-                </Link>
-              </td>
-              <td className="p-2 text-center truncate">용쌤</td>
-              <td className="p-2 text-center hidden sm:table-cell">29</td>
-              <td className="p-2 text-center hidden sm:table-cell">2</td>
-              <td className="p-2 truncate text-center hidden sm:table-cell">
-                2024.07.05 13:39:23
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300 ease-in-out">
-              <td className="p-2 text-center">1</td>
-              <td className="p-2 truncate indent-4">
-                <Link href="/info/1" className="cursor-pointer">
-                  좋은 소식이 있습니다.
-                </Link>
-              </td>
-              <td className="p-2 text-center truncate">제이지</td>
-              <td className="p-2 text-center hidden sm:table-cell">22</td>
-              <td className="p-2 text-center hidden sm:table-cell">5</td>
-              <td className="p-2 truncate text-center hidden sm:table-cell">
-                2024.07.03 17:59:13
-              </td>
-            </tr>
-          </tbody>
+          <tbody>{list}</tbody>
         </table>
         <hr />
 
-        <div>
-          <ul className="flex justify-center gap-3 m-4">
-            <li className="font-bold text-blue-700">
-              <Link href="/info?page=1">1</Link>
-            </li>
-            <li>
-              <Link href="/info?page=2">2</Link>
-            </li>
-          </ul>
-        </div>
+        <Pagination params={params} />
       </section>
     </main>
   );
