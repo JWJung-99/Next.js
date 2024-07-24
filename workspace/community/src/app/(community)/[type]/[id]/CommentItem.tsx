@@ -1,21 +1,20 @@
 import Submit from "@/components/Submit";
-import Image from "next/image";
+import { PostComment } from "@/types";
 import Link from "next/link";
-import { CommentProps } from "./CommentList";
 
-export default function CommentItem({ item }: { item: CommentProps }) {
+export default function CommentItem({ item }: { item: PostComment }) {
   return (
     <div className="shadow-md rounded-lg p-4 mb-4">
       <div className="flex justify-between items-center mb-2">
-        <Image
+        <img
           className="w-8 mr-2 rounded-full"
-          width={20}
-          height={20}
-          src={`https://api.fesp.shop${item.user.profile}`}
+          src={`https://api.fesp.shop${
+            item.user?.profile || "/files/00-sample/user-apeach.webp"
+          }`}
           alt="프로필 이미지"
         />
         <Link href="" className="text-orange-400">
-          {item.user.name}
+          {item.user?.name || "익명"}
         </Link>
         <time className="ml-auto text-gray-500" dateTime="2024.07.02 14:11:22">
           {item.createdAt}

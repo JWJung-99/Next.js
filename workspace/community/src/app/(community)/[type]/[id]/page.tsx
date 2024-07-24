@@ -1,54 +1,57 @@
 import Submit from "@/components/Submit";
+import { fetchDetail } from "@/data/fetch/postFetch";
 import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import CommentList from "./CommentList";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { type: string; id: string };
-}): Metadata {
+}): Promise<Metadata> {
+  const boardName = params.type;
+  const item = await fetchDetail(params.id);
+  if (item === null) notFound();
   return {
-    title: "좋은 소식이 있습니다.",
+    title: `${boardName} - ${item.title}`,
+    description: `${boardName} - ${item.content}`,
     openGraph: {
-      title: "좋은 소식이 있습니다.",
-      description: "좋은 소식을 가지고 왔습니다. 오늘 드디어...",
-      url: `https://community.fesp.shop/${params.type}/${params.id}`,
-      type: "article",
-      images: {
-        url: "/images/fesp.webp",
-      },
-      siteName: "멋사컴",
+      title: `${boardName} - ${item.title}`,
+      description: `${boardName} - ${item.content}`,
+      url: `/${params.type}/${params.id}`,
     },
   };
 }
 
-export default function PostDetailPage({
+export async function generateStaticParams() {
+  return [
+    { type: "notice", id: "4" },
+    { type: "notice", id: "5" },
+  ];
+}
+
+export default async function Page({
   params,
 }: {
   params: { type: string; id: string };
 }) {
-  const item = {
-    title: "좋은 소식이 있습니다.",
-    content:
-      "좋은 소식을 가지고 왔습니다. 오늘 드디어 최종 면접을 합니다. 많이 응원해 주세요^^",
-    user: {
-      name: "제이지",
-    },
-  };
+  // const data = await model.post.detail(+params.id);
+  const data = await fetchDetail(params.id);
+  if (data === null) notFound();
 
   return (
     <main className="container mx-auto mt-4 px-4">
       <section className="mb-8 p-4">
         <form action={`/${params.type}`}>
-          <div className="font-semibold text-xl">제목 : {item.title}</div>
+          <div className="font-semibold text-xl">제목 : {data?.title}</div>
           <div className="text-right text-gray-400">
-            작성자 : {item.user.name}
+            작성자 : {data?.user?.name || "익명"}
           </div>
           <div className="mb-4">
             <div>
               <pre className="font-roboto w-full p-2 whitespace-pre-wrap">
-                {item.content}
+                {data?.content}
               </pre>
             </div>
             <hr />
@@ -71,7 +74,7 @@ export default function PostDetailPage({
         </form>
       </section>
 
-      <CommentList />
+      <CommentList id={params.id} />
     </main>
   );
 }
